@@ -1,0 +1,80 @@
+import java.util.Random;
+
+public class Main {
+
+    // nao é necessario sempre ter main, mas normalmente é onde o codigo principal vai rodar
+    public static void main(String[] args) {
+
+        // Classes usam letras maiusculas de inicio, (Cat, Random, Utility)
+        var jorge = new Cat("jorge");
+        var rng = new Random();
+        var utility = new Utility();
+
+        int valorAleatorio;
+        int valorDesignado;
+        int delay = 250;
+
+        jorge.roar();
+
+        valorDesignado = rng.nextInt(60);
+
+        utility.write("Valor designado: " + valorDesignado + "   ");
+
+        // int testVar = 0;
+
+        // utility.lerp(testVar, 10,  0.1);
+
+        while (true) { // ou while != valorDesignado, ?, possivel
+
+            // utility.lerp(testVar, 10,  0.1);
+
+            valorAleatorio = rng.nextInt(60);
+            //write(valorAleatorio);
+
+            System.out.print("\rValor: " + valorAleatorio);
+
+            if (valorAleatorio == valorDesignado) break;
+
+            // try catch é basicamente um pcall() necesario em sleeps, java parece obrigar pra caso tenha erro ao contrario de lua
+            // interruptedException e runtimeException parecem ser necesasrios em outras partes também, sem try catch
+
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            // utility.sleep(2.5);
+        }
+        System.out.println();
+
+        System.out.println("loop encontrou valor aleatorio (" + valorDesignado + ") designado.");
+       // write(" loop encontrou valor aleatorio " + valorDesignado + " designado");
+
+        String phrase = writeReturn("i am a phrase wassup!");
+
+        utility.write(phrase);
+
+    }
+
+    // funções sem void precisam retornar valor, sendo necessario declarar tipo de variavel
+    public static String writeReturn(String text) {
+        System.out.println(text);
+
+        return text;
+    }
+
+    // funções com void apenas "ignoram" (no caso nao existe, pois void é nulo) e rodam a função diretamente, sem retornar nada
+    public void write(String text) {
+        System.out.println(text);
+    }
+
+    public void write(int number) {
+        System.out.println(number);
+    }
+
+    public int somar(int n1, int n2) {
+        return n1 + n2;
+    }
+
+}
