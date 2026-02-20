@@ -14,6 +14,7 @@ public class Utility {
         return a + (b - a) * t;
     }
 
+    // entender o conceito de "L" em numeros longos, tem relação com milimis
     public void sleep(int threadDelay) {
         try {
             Thread.sleep(threadDelay * 1000L);
@@ -22,6 +23,7 @@ public class Utility {
         }
     }
 
+    // entender o conceito de (long) depois, ainda nao compreendi muito bem
     public void sleep(double threadDelay) {
         try {
             Thread.sleep((long) (threadDelay * 1000L));
