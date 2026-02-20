@@ -1,12 +1,14 @@
 import javax.swing.*;
-import java.awt.*;
+import java.util.Random;
 
 public class Button {
 
+    // int[] var1 é possivel também, etc
     // String[] args é uma variavel de arrays, com nome de args
     public static void main(String[] args) {
 
         var utility = new Utility();
+        var rng = new Random();
 
         JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
@@ -22,12 +24,12 @@ public class Button {
 
         // { e } podem ser usados para criar escopos
         {
+            int[] intArrays = {};
             String text1 = "this is a string";
             utility.write(text1);
         }
 
         // variavel text1 nao existe fora do escopo, se tentar chamar vai dar erro
-
 
         // variaveis criadas dentro de lambda -> só pertencem aquele escopo
         // nao se pode usar variavel fora de lambda e referenciar dentro de alguma escopo lambda
@@ -40,11 +42,16 @@ public class Button {
                 int currentX = frame.getX();
                 int currentY = frame.getY();
 
-                utility.write("le fishe");
+                int randomPos = rng.nextInt(100, 400);
+
+                boolean bool = rng.nextBoolean();
+
+                utility.write(randomPos);
+                utility.write(bool);
 
                 for (int i = 0; i < 30; i++) {
                     testVar = utility.lerp(testVar, 10, 0.1);
-                    location = utility.lerp(location, 100, 0.1);
+                    location = utility.lerp(location, randomPos, 0.1);
 
                     // tal do cast, usa (variavel)
                     // cast transforma um tipo de variavel em outra diretamente, então os double vira int por exemplo, 5.5 > 5 etc
@@ -52,9 +59,13 @@ public class Button {
 
                     // (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
                     // e por lerp ser double naturalmente, a conversão é de double > int
-                    frame.setLocation(currentX + (int) location, currentY + (int) location);
+                    if (bool) {
+                        frame.setLocation(currentX + (int) location, currentY + (int) location);
+                    } else {
+                        frame.setLocation(currentX + (int) -location, currentY + (int) -location);
+                    }
 
-                    utility.write(testVar);
+                    //utility.write(testVar);
 
                     utility.sleep(0.1);
                     // utility.write("le fishe repeat " + i);
@@ -68,6 +79,10 @@ public class Button {
 
         frame.getContentPane().add(botao);
         frame.setVisible(true);
+
+    }
+
+    public static void moveButton() {
 
     }
 
