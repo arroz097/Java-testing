@@ -1,7 +1,28 @@
 import javax.swing.*;
 import java.util.Random;
+// improtar pacotes de utilidade propriamente meus? talvez
 
-public class Button {
+public class ButtonTest {
+
+    // private impede de consguirem modificar a variavel de fora
+    // por ser uma varivel pertencente a classe Button, o this.isMoving funciona, ja que está fora do main que é uma função static
+    // (this) consegue referenciar classes
+    private boolean isMoving = false;
+
+    public boolean toggleMove(boolean toggle) {
+        this.isMoving = toggle;
+        return  this.isMoving;
+    }
+
+    public void toggleMove() {
+        // daria pra ter usado também this.isMoving = !this.isMoving;
+        // ! é operador de negação, tal qual NOT
+        if (this.isMoving) {
+            this.isMoving = false;
+        } else {
+            this.isMoving = true;
+        }
+    }
 
     // int[] var1 é possivel também, etc
     // String[] args é uma variavel de arrays, com nome de args
@@ -9,16 +30,16 @@ public class Button {
 
         var utility = new Utility();
         var rng = new Random();
+        ButtonTest button = new ButtonTest();
 
         JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
+        frame.setLocationRelativeTo(null);
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JButton botao = new JButton("move!");
         botao.setBounds(70, 70, 150, 30);
-
-        //botao.setSize(50, 50);
 
         frame.add(botao);
 
@@ -33,7 +54,12 @@ public class Button {
 
         // variaveis criadas dentro de lambda -> só pertencem aquele escopo
         // nao se pode usar variavel fora de lambda e referenciar dentro de alguma escopo lambda
+        // e aparenemtente lambda é uma função anonima, então nao cosnegue usar variaveis de fora dentro
         botao.addActionListener(e -> {
+
+            if (button.isMoving) return;
+
+            button.isMoving = true;
 
             new Thread(() -> {
                 double testVar = 0;
@@ -48,6 +74,8 @@ public class Button {
 
                 utility.write(randomPos);
                 utility.write(bool);
+
+                botao.setText("moving...");
 
                 for (int i = 0; i < 30; i++) {
                     testVar = utility.lerp(testVar, 10, 0.1);
@@ -73,16 +101,18 @@ public class Button {
 
                 essay();
 
+                utility.sleep(1);
+
+                button.toggleMove();
+
+                botao.setText("move!");
+
             }).start();
 
         });
 
         frame.getContentPane().add(botao);
         frame.setVisible(true);
-
-    }
-
-    public static void moveButton() {
 
     }
 
