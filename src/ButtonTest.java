@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.util.Random;
-// improtar pacotes de utilidade propriamente meus? talvez
+// importar pacotes de utilidade propriamente meus? talvez
 
 public class ButtonTest {
 
@@ -9,9 +9,9 @@ public class ButtonTest {
     // (this) consegue referenciar classes
     private boolean isMoving = false;
 
-    public boolean toggleMove(boolean toggle) {
+    public void toggleMove(boolean toggle) {
         this.isMoving = toggle;
-        return  this.isMoving;
+        // return  this.isMoving;
     }
 
     public void toggleMove() {
@@ -28,20 +28,21 @@ public class ButtonTest {
     // String[] args é uma variavel de arrays, com nome de args
     public static void main(String[] args) {
 
+        // var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
         var utility = new Utility();
         var rng = new Random();
-        ButtonTest button = new ButtonTest();
+        var button = new ButtonTest();
 
         JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(null); // centraliza o gui no meio da tela
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JButton botao = new JButton("move!");
-        botao.setBounds(70, 70, 150, 30);
+        JButton buttonGui = new JButton("move!");
+        buttonGui.setBounds(70, 70, 150, 30);
 
-        frame.add(botao);
+        frame.add(buttonGui);
 
         // { e } podem ser usados para criar escopos
         {
@@ -55,12 +56,14 @@ public class ButtonTest {
         // variaveis criadas dentro de lambda -> só pertencem aquele escopo
         // nao se pode usar variavel fora de lambda e referenciar dentro de alguma escopo lambda
         // e aparenemtente lambda é uma função anonima, então nao cosnegue usar variaveis de fora dentro
-        botao.addActionListener(e -> {
+        buttonGui.addActionListener(e -> {
 
             if (button.isMoving) return;
 
-            button.isMoving = true;
+            button.toggleMove(true);
 
+            // recomendado usar swingUtilities em vez de novas threads aparentemente
+            // new Thread parece ser pesado se criado toda hora, mas por ora serve
             new Thread(() -> {
                 double testVar = 0;
                 double location = 0;
@@ -75,7 +78,7 @@ public class ButtonTest {
                 utility.write(randomPos);
                 utility.write(bool);
 
-                botao.setText("moving...");
+                buttonGui.setText("moving...");
 
                 for (int i = 0; i < 30; i++) {
                     testVar = utility.lerp(testVar, 10, 0.1);
@@ -105,13 +108,13 @@ public class ButtonTest {
 
                 button.toggleMove();
 
-                botao.setText("move!");
+                buttonGui.setText("move!");
 
             }).start();
 
         });
 
-        frame.getContentPane().add(botao);
+        frame.getContentPane().add(buttonGui);
         frame.setVisible(true);
 
     }
