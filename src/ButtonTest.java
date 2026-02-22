@@ -33,6 +33,10 @@ public class ButtonTest {
         }
     }
 
+    public void someTest() {
+        this.isMoving = false;
+    }
+
     // int[] var1 é possivel também, etc
     // String[] args é uma variavel de arrays, com nome de args
     public static void main(String[] args) {
@@ -43,6 +47,12 @@ public class ButtonTest {
          var rng = new Random();
          var button = new ButtonTest();
         */
+
+        // button1.moveButton(30, 40);
+
+        //button1.moveButton();
+
+        //button1.createButton();
 
         //JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
@@ -55,6 +65,13 @@ public class ButtonTest {
 
         frame.add(buttonGui);
         frame.setVisible(true);
+
+        button.someTest();
+
+        var button1 = new ButtonCreator("frame1", "move me");
+        button1.frame.setLocation(button1.frame.getX() / 2 + frame.getX(), button1.frame.getY());
+
+        button1.moveButton(0, 200);
 
         // { e } podem ser usados para criar escopos
         {
@@ -69,7 +86,6 @@ public class ButtonTest {
         // nao se pode usar variavel fora de lambda e referenciar dentro de alguma escopo lambda
         // e aparenemtente lambda é uma função anonima, então nao cosnegue usar variaveis de fora dentro
         buttonGui.addActionListener(e -> {
-
             //button.moveButton();
             moveButton();
         });
@@ -115,7 +131,7 @@ public class ButtonTest {
                     frame.setLocation(currentX + (int) -location, currentY + (int) -location);
                 }
 
-                //utility.write(testVar);
+                // utility.write(testVar);
 
                 utility.sleep(0.1);
                 // utility.write("le fishe repeat " + i);
