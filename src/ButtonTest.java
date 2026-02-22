@@ -9,6 +9,15 @@ public class ButtonTest {
     // (this) consegue referenciar classes
     private boolean isMoving = false;
 
+    // static permite a classe utility ser usada em todos metodos e funções
+    // final permite que a variavel nao seja alterada
+    private static final Utility utility = new Utility();
+    private static final ButtonTest button = new ButtonTest();
+    private static final Random rng = new Random();
+
+    private static final JFrame frame = new JFrame("this is a test!!");
+    private static final JButton buttonGui = new JButton("move!");
+
     public void toggleMove(boolean toggle) {
         this.isMoving = toggle;
         // return  this.isMoving;
@@ -28,21 +37,24 @@ public class ButtonTest {
     // String[] args é uma variavel de arrays, com nome de args
     public static void main(String[] args) {
 
-        // var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
-        var utility = new Utility();
-        var rng = new Random();
-        var button = new ButtonTest();
+        /*
+         var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
+         var utility = new Utility();
+         var rng = new Random();
+         var button = new ButtonTest();
+        */
 
-        JFrame frame = new JFrame("this is a test!!");
+        //JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
         frame.setLocationRelativeTo(null); // centraliza o gui no meio da tela
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JButton buttonGui = new JButton("move!");
         buttonGui.setBounds(70, 70, 150, 30);
+        buttonGui.setFocusPainted(false);
 
         frame.add(buttonGui);
+        frame.setVisible(true);
 
         // { e } podem ser usados para criar escopos
         {
@@ -50,73 +62,74 @@ public class ButtonTest {
             String text1 = "this is a string";
             utility.write(text1);
         }
-
         // variavel text1 nao existe fora do escopo, se tentar chamar vai dar erro
+
 
         // variaveis criadas dentro de lambda -> só pertencem aquele escopo
         // nao se pode usar variavel fora de lambda e referenciar dentro de alguma escopo lambda
         // e aparenemtente lambda é uma função anonima, então nao cosnegue usar variaveis de fora dentro
         buttonGui.addActionListener(e -> {
 
-            if (button.isMoving) return;
-
-            button.toggleMove(true);
-
-            // recomendado usar swingUtilities em vez de novas threads aparentemente
-            // new Thread parece ser pesado se criado toda hora, mas por ora serve
-            new Thread(() -> {
-                double testVar = 0;
-                double location = 0;
-
-                int currentX = frame.getX();
-                int currentY = frame.getY();
-
-                int randomPos = rng.nextInt(100, 400);
-
-                boolean bool = rng.nextBoolean();
-
-                utility.write(randomPos);
-                utility.write(bool);
-
-                buttonGui.setText("moving...");
-
-                for (int i = 0; i < 30; i++) {
-                    testVar = utility.lerp(testVar, 10, 0.1);
-                    location = utility.lerp(location, randomPos, 0.1);
-
-                    // tal do cast, usa (variavel)
-                    // cast transforma um tipo de variavel em outra diretamente, então os double vira int por exemplo, 5.5 > 5 etc
-                    //botao.setLocation((int) location, (int) location);
-
-                    // (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
-                    // e por lerp ser double naturalmente, a conversão é de double > int
-                    if (bool) {
-                        frame.setLocation(currentX + (int) location, currentY + (int) location);
-                    } else {
-                        frame.setLocation(currentX + (int) -location, currentY + (int) -location);
-                    }
-
-                    //utility.write(testVar);
-
-                    utility.sleep(0.1);
-                    // utility.write("le fishe repeat " + i);
-                }
-
-                essay();
-
-                utility.sleep(1);
-
-                button.toggleMove();
-
-                buttonGui.setText("move!");
-
-            }).start();
-
+            //button.moveButton();
+            moveButton();
         });
 
-        frame.getContentPane().add(buttonGui);
-        frame.setVisible(true);
+    }
 
+    public static void moveButton() {
+        if (button.isMoving) return;
+
+        button.toggleMove(true);
+
+        // recomendado usar swingUtilities em vez de novas threads aparentemente
+        // new Thread parece ser pesado se criado toda hora, mas por ora serve
+        new Thread(() -> {
+            double testVar = 0;
+            double location = 0;
+
+            int currentX = frame.getX();
+            int currentY = frame.getY();
+
+            int randomPos = rng.nextInt(100, 400);
+
+            boolean bool = rng.nextBoolean();
+
+            utility.write(randomPos);
+            utility.write(bool);
+
+            buttonGui.setText("moving...");
+
+            for (int i = 0; i < 30; i++) {
+                testVar = utility.lerp(testVar, 10, 0.1);
+                location = utility.lerp(location, randomPos, 0.1);
+
+                // tal do cast, usa (variavel)
+                // cast transforma um tipo de variavel em outra diretamente, então os double vira int por exemplo, 5.5 > 5 etc
+                //botao.setLocation((int) location, (int) location);
+
+                // (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
+                // e por lerp ser double naturalmente, a conversão é de double > int
+                if (bool) {
+                    frame.setLocation(currentX + (int) location, currentY + (int) location);
+                } else {
+                    frame.setLocation(currentX + (int) -location, currentY + (int) -location);
+                }
+
+                //utility.write(testVar);
+
+                utility.sleep(0.1);
+                // utility.write("le fishe repeat " + i);
+            }
+
+            essay();
+
+            utility.sleep(1);
+
+            button.toggleMove();
+
+            buttonGui.setText("move!");
+
+        }).start();
     }
 
     public static void essay() {
