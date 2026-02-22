@@ -71,6 +71,9 @@ public class ButtonTest {
         var button1 = new ButtonCreator("frame1", "move me");
         button1.frame.setLocation(button1.frame.getX() / 2 + frame.getX(), button1.frame.getY());
 
+        var rngButton = new ButtonCreator("rng master", "create buttons");
+        rngButton.frame.setLocation(-rngButton.frame.getX() / 2 + frame.getX(), rngButton.frame.getY());
+
         button1.moveButton(0, 200);
 
         // { e } podem ser usados para criar escopos
@@ -88,6 +91,19 @@ public class ButtonTest {
         buttonGui.addActionListener(e -> {
             //button.moveButton();
             moveButton();
+        });
+
+        // swing utiliters invoke later aqui talvez também
+        rngButton.button.addActionListener(e -> {
+            for (int i = 0; i < 10 ; i++) {
+                int xLocation = rng.nextInt(-400, 400);
+                int yLocation = rng.nextInt(-400, 400);
+
+                var holder = new ButtonCreator("frame " + i, "dont mind me");
+
+                holder.frame.setLocation(rngButton.frame.getX() + xLocation, rngButton.frame.getY() + yLocation);
+
+            }
         });
 
     }
