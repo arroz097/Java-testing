@@ -15,7 +15,7 @@ public class ButtonTest {
     private static final ButtonTest button = new ButtonTest();
     private static final Random rng = new Random();
 
-    private static final JFrame frame = new JFrame("this is a test!!");
+    private static final JFrame frame = new JFrame("moving frame");
     private static final JButton buttonGui = new JButton("move!");
 
     public void toggleMove(boolean toggle) {
@@ -48,12 +48,6 @@ public class ButtonTest {
          var button = new ButtonTest();
         */
 
-        // button1.moveButton(30, 40);
-
-        //button1.moveButton();
-
-        //button1.createButton();
-
         //JFrame frame = new JFrame("this is a test!!");
         frame.setSize(300, 200);
         frame.setLocationRelativeTo(null); // centraliza o gui no meio da tela
@@ -68,13 +62,13 @@ public class ButtonTest {
 
         button.someTest();
 
-        var button1 = new ButtonCreator("frame1", "move me");
+        var button1 = new ButtonCreator("shrink button", "shrink me!");
         button1.frame.setLocation(button1.frame.getX() / 2 + frame.getX(), button1.frame.getY());
 
         var rngButton = new ButtonCreator("rng master", "create buttons");
         rngButton.frame.setLocation(-rngButton.frame.getX() / 2 + frame.getX(), rngButton.frame.getY());
 
-        button1.moveButton(0, 200);
+        //button1.moveButton(0, 200);
 
         // { e } podem ser usados para criar escopos
         {
@@ -96,6 +90,7 @@ public class ButtonTest {
         // swing utiliters invoke later aqui talvez também
         rngButton.button.addActionListener(e -> {
             for (int i = 0; i < 10 ; i++) {
+                // X e Y com valores proprios aleatorios peermite uma aleatoriedade mais natural
                 int xLocation = rng.nextInt(-400, 400);
                 int yLocation = rng.nextInt(-400, 400);
 
@@ -104,6 +99,26 @@ public class ButtonTest {
                 holder.frame.setLocation(rngButton.frame.getX() + xLocation, rngButton.frame.getY() + yLocation);
 
             }
+        });
+
+        // fazer esse botao diminuir de size via lerp e talvez se destruir? possivel
+        button1.button.addActionListener(e -> {
+            button1.button.setEnabled(false);
+
+            int height = button1.frame.getHeight();
+            int width = button1.frame.getWidth();
+
+            for (int i = 0; i < 20; i++) {
+
+                width = (int) utility.lerp(width, 0, 0.1);
+                height = (int) utility.lerp(height, 0, 0.1);
+
+                button1.frame.setSize(width, height);
+
+                utility.sleep(0.1);
+            }
+
+            //button1.frame.remove(button1.frame);
         });
 
     }
@@ -116,13 +131,15 @@ public class ButtonTest {
         // recomendado usar swingUtilities em vez de novas threads aparentemente
         // new Thread parece ser pesado se criado toda hora, mas por ora serve
         new Thread(() -> {
-            double testVar = 0;
-            double location = 0;
+            //double testVar = 0;
+            double locationX = 0;
+            double locationY = 0;
 
             int currentX = frame.getX();
             int currentY = frame.getY();
 
-            int randomPos = rng.nextInt(100, 400);
+            int randomPos = rng.nextInt(-400, 400);
+            int randomPos2 = rng.nextInt(-400, 400);
 
             boolean bool = rng.nextBoolean();
 
@@ -132,8 +149,9 @@ public class ButtonTest {
             buttonGui.setText("moving...");
 
             for (int i = 0; i < 30; i++) {
-                testVar = utility.lerp(testVar, 10, 0.1);
-                location = utility.lerp(location, randomPos, 0.1);
+                //testVar = utility.lerp(testVar, 10, 0.1);
+                locationX = utility.lerp(locationX, randomPos, 0.1);
+                locationY = utility.lerp(locationY, randomPos2, 0.1);
 
                 // tal do cast, usa (variavel)
                 // cast transforma um tipo de variavel em outra diretamente, então os double vira int por exemplo, 5.5 > 5 etc
@@ -141,11 +159,16 @@ public class ButtonTest {
 
                 // (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
                 // e por lerp ser double naturalmente, a conversão é de double > int
+
+                /*
                 if (bool) {
                     frame.setLocation(currentX + (int) location, currentY + (int) location);
                 } else {
                     frame.setLocation(currentX + (int) -location, currentY + (int) -location);
                 }
+                 */
+
+                frame.setLocation(currentX + (int) locationX, currentY + (int) locationY);
 
                 // utility.write(testVar);
 
