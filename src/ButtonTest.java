@@ -62,8 +62,8 @@ public class ButtonTest {
 
         button.someTest();
 
-        var button1 = new ButtonCreator("shrink button", "shrink me!");
-        button1.frame.setLocation(button1.frame.getX() / 2 + frame.getX(), button1.frame.getY());
+        var shrinkButton = new ButtonCreator("shrink button", "shrink me!");
+        shrinkButton.frame.setLocation(shrinkButton.frame.getX() / 2 + frame.getX(), shrinkButton.frame.getY());
 
         var rngButton = new ButtonCreator("rng master", "create buttons");
         rngButton.frame.setLocation(-rngButton.frame.getX() / 2 + frame.getX(), rngButton.frame.getY());
@@ -98,27 +98,34 @@ public class ButtonTest {
 
                 holder.frame.setLocation(rngButton.frame.getX() + xLocation, rngButton.frame.getY() + yLocation);
 
+                //holder.removeButton();
+
+                utility.sleep(0.1);
+
+                holder.frame.dispose();
+
             }
+
         });
 
         // fazer esse botao diminuir de size via lerp e talvez se destruir? possivel
-        button1.button.addActionListener(e -> {
-            button1.button.setEnabled(false);
+        shrinkButton.button.addActionListener(e -> {
+            shrinkButton.button.setEnabled(false);
 
-            int height = button1.frame.getHeight();
-            int width = button1.frame.getWidth();
+            int height = shrinkButton.frame.getHeight();
+            int width = shrinkButton.frame.getWidth();
 
             for (int i = 0; i < 20; i++) {
 
                 width = (int) utility.lerp(width, 0, 0.1);
                 height = (int) utility.lerp(height, 0, 0.1);
 
-                button1.frame.setSize(width, height);
+                shrinkButton.frame.setSize(width, height);
 
-                utility.sleep(0.1);
+                utility.sleep(0.2);
             }
 
-            //button1.frame.remove(button1.frame);
+            shrinkButton.frame.dispose();
         });
 
     }

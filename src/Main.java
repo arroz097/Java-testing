@@ -6,23 +6,26 @@ public class Main {
     public static void main(String[] args) {
 
         // Classes usam letras maiusculas de inicio, (Cat, Random, Utility)
+        // var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
         var jorge = new Cat("jorge");
+        var eduardo = new Cat("eduardo");
         var rng = new Random();
         var utility = new Utility();
+        // var button = new ButtonTest();
+
+        // se caso .isMoving nao fosse private
+        // button.isMoving = false;
 
         int valorAleatorio;
         int valorDesignado;
         int delay = 250;
 
+        eduardo.roar();
         jorge.roar();
 
         valorDesignado = rng.nextInt(60);
 
         utility.write("Valor designado: " + valorDesignado + "   ");
-
-        // int testVar = 0;
-
-        // utility.lerp(testVar, 10,  0.1);
 
         while (true) { // ou while != valorDesignado, ?, possivel
 

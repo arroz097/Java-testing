@@ -28,6 +28,12 @@ public class ButtonCreator {
 
     }
 
+    // inutil? talvez
+    public void removeButton() {
+        this.frame.remove(this.button);
+        this.frame.revalidate();
+        this.frame.repaint();
+    }
 
     public void moveButton(int xPos, int yPos) {
         if (this.isMoving) return;
