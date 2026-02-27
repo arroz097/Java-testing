@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class ButtonCreator {
 
@@ -15,18 +16,39 @@ public class ButtonCreator {
         this.frame = new JFrame(frameText);
         this.frame.setSize(300, 200);
         this.frame.setLocationRelativeTo(null); // centraliza o gui no meio da tela
-        this.frame.setLayout(null);
+        this.frame.setLayout(new GridBagLayout());
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // configura o botão
         this.button = new JButton(buttonText);
-        this.button.setBounds(70, 70, 150, 30);
+        this.button.setPreferredSize(new Dimension(180, 30));
+        //this.button.setBounds(70, 70, 150, 30);
         this.button.setFocusPainted(false);
 
         this.frame.add(this.button);
         this.frame.setVisible(true);
 
     }
+
+    public ButtonCreator(String frameText, String buttonText, int frameWidth, int frameHeight, int buttonWidth, int buttonHeight) {
+
+        // configura o frame
+        this.frame = new JFrame(frameText);
+        this.frame.setSize(frameWidth, frameHeight);
+        this.frame.setLocationRelativeTo(null);
+        this.frame.setLayout(new GridBagLayout());
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // configura o botão
+        this.button = new JButton(buttonText);
+        this.button.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        this.button.setFocusPainted(false);
+
+        this.frame.add(this.button);
+        this.frame.setVisible(true);
+
+    }
+
 
     // inutil? talvez
     public void removeButton() {
