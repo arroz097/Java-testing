@@ -20,8 +20,17 @@ public class Main {
         int valorDesignado;
         int delay = 250;
 
-        eduardo.roar();
-        jorge.roar();
+        var jorgeButton = new ButtonCreator("cat  " + jorge.name, "ROAR!", 200, 150, 100, 30);
+        var eduardoButton = new ButtonCreator("cat " + eduardo.name, "ROAR!", 200, 150, 100, 30);
+
+        var jorgeBed = new ButtonCreator(jorge.name + "'s bed", "sleep!", 200, 150, 100, 30);
+        var eduardoBed = new ButtonCreator(eduardo.name + "'s bed", "sleep!", 200, 150, 100, 30);
+
+        jorgeButton.button.addActionListener(e -> jorge.roar());
+        eduardoButton.button.addActionListener(e -> eduardo.roar());
+
+        jorgeBed.button.addActionListener(e -> jorge.sleep());
+        eduardoBed.button.addActionListener(e -> eduardo.sleep());
 
         valorDesignado = rng.nextInt(60);
 
