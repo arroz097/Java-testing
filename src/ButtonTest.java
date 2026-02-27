@@ -24,13 +24,8 @@ public class ButtonTest {
     }
 
     public void toggleMove() {
-        // daria pra ter usado também this.isMoving = !this.isMoving;
-        // ! é operador de negação, tal qual NOT
-        if (this.isMoving) {
-            this.isMoving = false;
-        } else {
-            this.isMoving = true;
-        }
+        // ! é o operador de negação, tal qual not
+        this.isMoving = !this.isMoving;
     }
 
     public void someTest() {
@@ -58,6 +53,7 @@ public class ButtonTest {
         buttonGui.setFocusPainted(false);
 
         frame.add(buttonGui);
+        //frame.setUndecorated(true);
         frame.setVisible(true);
 
         button.someTest();
@@ -75,6 +71,7 @@ public class ButtonTest {
             int[] intArrays = {};
             String text1 = "this is a string";
             utility.write(text1);
+            utility.write(intArrays);
         }
         // variavel text1 nao existe fora do escopo, se tentar chamar vai dar erro
 
@@ -100,9 +97,9 @@ public class ButtonTest {
 
                 //holder.removeButton();
 
-                utility.sleep(0.1);
-
-                holder.frame.dispose();
+                // nao achei que actionListener fosse funcionar dentro do loop individualmente pra cada botão
+                // pensei em usar tabelas pra guardar todos botoes e no termino do loop deletar todos botoes
+                holder.button.addActionListener(e1 -> holder.frame.dispose());
 
             }
 
@@ -120,9 +117,11 @@ public class ButtonTest {
                 width = (int) utility.lerp(width, 0, 0.1);
                 height = (int) utility.lerp(height, 0, 0.1);
 
-                shrinkButton.frame.setSize(width, height);
+                //shrinkButton.frame.setBounds(newX, newY, width, height);
 
-                utility.sleep(0.2);
+                utility.setSizeCentered(shrinkButton.frame, width, height);
+
+                utility.sleep(0.1);
             }
 
             shrinkButton.frame.dispose();
@@ -164,10 +163,10 @@ public class ButtonTest {
                 // cast transforma um tipo de variavel em outra diretamente, então os double vira int por exemplo, 5.5 > 5 etc
                 //botao.setLocation((int) location, (int) location);
 
-                // (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
-                // e por lerp ser double naturalmente, a conversão é de double > int
-
                 /*
+                 (cast) é necessario pois frame trabalha apenas com numeros inteiros devido aos pixeis, entao a conver~sao é obrigatoria
+                 e por lerp ser double naturalmente, a conversão é de double > int
+
                 if (bool) {
                     frame.setLocation(currentX + (int) location, currentY + (int) location);
                 } else {
