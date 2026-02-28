@@ -5,29 +5,45 @@ public class Cat {
     // fazer sistema de stamina
     String name;
     int energy;
+    boolean onAction = false;
 
     // Isso é o construtor: ele roda assim que você dá o "new"
     // equivalente ao .new() de OOP dos metatables, this é o equivalente de self
     public Cat(String nome) {
 
         this.name = nome;
-        this.energy = 10; // starts with 10 energy
+        this.energy = 10; // começa com 10 de energia
 
     }
 
     public void roar() {
+        if (this.onAction) return;
+
         int cost = 1;
-        if (this.energy > 1) {
+
+        if (this.energy > cost) {
+            this.onAction = true;
+
             this.energy--;
-            System.out.println("gato " + this.name + " diz: " + "RAWRRRR!!!!");
-            System.out.println(this.name + " perde " + cost + " stamina. Atual: " + this.energy);
+            utility.write("gato " + this.name + " diz: " + "RAWRRRR!!!!");
+            utility.sleep(0.5);
+            utility.write(this.name + " perde " + cost + " stamina. Atual: " + this.energy);
+
+            utility.sleep(0.3);
+
+            this.onAction = false;
         } else {
             utility.write(this.name + " nao possui energia suficiente para rugidos, tente um descanso");
         }
+
     }
 
     public void sleep() {
         if (this.energy < 10) {
+            if (this.onAction) return;
+
+            this.onAction = true;
+
             utility.write(this.name + " iniciando soneca");
             while (this.energy < 10) {
                 utility.sleep(1);
@@ -38,9 +54,12 @@ public class Cat {
             }
             utility.sleep(0.5);
             utility.write(this.name + " dormiu um bocado e recuperou energia" );
+
+            utility.sleep(0.5);
+
+            this.onAction = false;
         } else {
             utility.write(this.name + " nao precisa de descanso por ora");
         }
     }
-
 }
