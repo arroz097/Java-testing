@@ -7,9 +7,11 @@ public class ButtonCreator {
 
     private boolean isMoving = false;
 
-    JFrame frame;
-    JButton button;
+    private final JFrame frame;
+    private final JButton button;
 
+    // talvez criar uma variavel de cooldown em relação aos botoes?
+    // assim evitando spam e filas de execuçção, nem que seja um cooldown curto
     public ButtonCreator(String frameText, String buttonText) {
 
         // configura o frame
@@ -49,6 +51,13 @@ public class ButtonCreator {
 
     }
 
+    public JFrame getFrame() {
+        return this.frame;
+    }
+
+    public JButton getButton() {
+        return this.button;
+    }
 
     // inutil? talvez
     public void removeButton() {
