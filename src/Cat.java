@@ -1,11 +1,13 @@
 public class Cat {
 
-    private  static final Utility utility = new Utility();
+    private static final Utility utility = new Utility();
 
     // fazer sistema de stamina
-    String name;
-    int energy;
-    boolean onAction = false;
+    // private faz com que scripts de fora nao consigam alterar variaveis private
+    // final permite que variavel só seja atribuido um valor uma unica vez
+    private final String name;
+    private int energy;
+    private boolean onAction = false;
 
     // Isso é o construtor: ele roda assim que você dá o "new"
     // equivalente ao .new() de OOP dos metatables, this é o equivalente de self
@@ -16,12 +18,24 @@ public class Cat {
 
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public int getEnergy() {
+        return this.energy;
+    }
+
+    public boolean getAction() {
+        return this.onAction;
+    }
+
     public void roar() {
         if (this.onAction) return;
 
         int cost = 1;
 
-        if (this.energy > cost) {
+        if (this.energy >= cost) {
             this.onAction = true;
 
             this.energy--;
