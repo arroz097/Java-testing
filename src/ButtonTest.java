@@ -59,10 +59,10 @@ public class ButtonTest {
         button.someTest();
 
         var shrinkButton = new ButtonCreator("shrink button", "shrink me!");
-        shrinkButton.frame.setLocation(shrinkButton.frame.getX() / 2 + frame.getX(), shrinkButton.frame.getY());
+        shrinkButton.getFrame().setLocation(shrinkButton.getFrame().getX() / 2 + frame.getX(), shrinkButton.getFrame().getY());
 
         var rngButton = new ButtonCreator("rng master", "create buttons");
-        rngButton.frame.setLocation(-rngButton.frame.getX() / 2 + frame.getX(), rngButton.frame.getY());
+        rngButton.getFrame().setLocation(-rngButton.getFrame().getX() / 2 + frame.getX(), rngButton.getFrame().getY());
 
         //button1.moveButton(0, 200);
 
@@ -85,7 +85,7 @@ public class ButtonTest {
         });
 
         // swing utiliters invoke later aqui talvez também
-        rngButton.button.addActionListener(e -> {
+        rngButton.getButton().addActionListener(e -> {
             for (int i = 0; i < 10 ; i++) {
                 // X e Y com valores proprios aleatorios peermite uma aleatoriedade mais natural
                 int xLocation = rng.nextInt(-400, 400);
@@ -93,24 +93,24 @@ public class ButtonTest {
 
                 var holder = new ButtonCreator("frame " + i, "dont mind me");
 
-                holder.frame.setLocation(rngButton.frame.getX() + xLocation, rngButton.frame.getY() + yLocation);
+                holder.getFrame().setLocation(rngButton.getFrame().getX() + xLocation, rngButton.getFrame().getY() + yLocation);
 
                 //holder.removeButton();
 
                 // nao achei que actionListener fosse funcionar dentro do loop individualmente pra cada botão
                 // pensei em usar tabelas pra guardar todos botoes e no termino do loop deletar todos botoes
-                holder.button.addActionListener(e1 -> holder.frame.dispose());
+                holder.getButton().addActionListener(e1 -> holder.getFrame().dispose());
 
             }
 
         });
 
         // fazer esse botao diminuir de size via lerp e talvez se destruir? possivel
-        shrinkButton.button.addActionListener(e -> {
-            shrinkButton.button.setEnabled(false);
+        shrinkButton.getButton().addActionListener(e -> {
+            shrinkButton.getButton().setEnabled(false);
 
-            int height = shrinkButton.frame.getHeight();
-            int width = shrinkButton.frame.getWidth();
+            int height = shrinkButton.getFrame().getHeight();
+            int width = shrinkButton.getFrame().getWidth();
 
             for (int i = 0; i < 20; i++) {
 
@@ -119,12 +119,12 @@ public class ButtonTest {
 
                 //shrinkButton.frame.setBounds(newX, newY, width, height);
 
-                utility.setSizeCentered(shrinkButton.frame, width, height);
+                utility.setSizeCentered(shrinkButton.getFrame(), width, height);
 
                 utility.sleep(0.1);
             }
 
-            shrinkButton.frame.dispose();
+            shrinkButton.getFrame().dispose();
         });
 
     }
