@@ -19,38 +19,51 @@ public class Main {
         // se caso .isMoving nao fosse private
         // button.isMoving = false;
 
-        // organizar frames u mem cima do outro
-        var jorgeButton = new ButtonCreator("cat  " + jorge.name, "ROAR!", 200, 150, 100, 30);
-        var eduardoButton = new ButtonCreator("cat " + eduardo.name, "ROAR!", 200, 150, 100, 30);
+        String jorgeName = jorge.getName();
+        int jorgeEnergy = jorge.getEnergy();
+        utility.write(jorgeName);
+        utility.write(jorgeEnergy);
 
-        var jorgeBed = new ButtonCreator(jorge.name + "'s bed", "sleep!", 200, 150, 100, 30);
-        var eduardoBed = new ButtonCreator(eduardo.name + "'s bed", "sleep!", 200, 150, 100, 30);
+        // organizar frames u mem cima do outro
+        var jorgeButton = new ButtonCreator("cat  " + jorge.getName(), "ROAR!", 200, 150, 100, 30);
+        var eduardoButton = new ButtonCreator("cat " + eduardo.getName(), "ROAR!", 200, 150, 100, 30);
+
+        var jorgeBed = new ButtonCreator(jorge.getName() + "'s bed", "sleep!", 200, 150, 100, 30);
+        var eduardoBed = new ButtonCreator(eduardo.getName() + "'s bed", "sleep!", 200, 150, 100, 30);
 
         var loopButton = new ButtonCreator("loop ft. rng", "do the loop!");
 
-        loopButton.frame.setLocation(loopButton.frame.getX(), 200);
+        loopButton.getFrame().setLocation(loopButton.getFrame().getX(), 200);
 
         // nao é a melhor das formas para posicionar um gui
         // já que não posiciona de acordo com a dimensão da tela, e sim com valores puros absolutos
-        jorgeButton.frame.setLocation(jorgeButton.frame.getX() + 200, jorgeButton.frame.getY());
-        jorgeBed.frame.setLocation(jorgeButton.frame.getX(), jorgeButton.frame.getY() + 150);
+        jorgeButton.getFrame().setLocation(jorgeButton.getFrame().getX() + 200, jorgeButton.getFrame().getY());
+        jorgeBed.getFrame().setLocation(jorgeButton.getFrame().getX(), jorgeButton.getFrame().getY() + 150);
+
+        eduardoButton.getFrame().setLocation(eduardoButton.getFrame().getX() - 200, eduardoButton.getFrame().getY());
+        eduardoBed.getFrame().setLocation(eduardoButton.getFrame().getX(), eduardoButton.getFrame().getY() + 150);
 
         // percebi que se spammar os botões as funções do OOP gato executam varias vezes, como se estivesse nuam fila
         // java aparentemente coloca os cliques em uma fila de execução
         // da pra desativar botão no clique ou criar um sistema de debounce
-        eduardoButton.frame.setLocation(eduardoButton.frame.getX() - 200, eduardoButton.frame.getY());
-        eduardoBed.frame.setLocation(eduardoButton.frame.getX(), eduardoButton.frame.getY() + 150);
+        jorgeButton.getButton().addActionListener(e -> {
+            if (jorge.getAction()) {
+                return;
+            }
 
-        jorgeButton.button.addActionListener(e -> jorge.roar());
-        eduardoButton.button.addActionListener(e -> eduardo.roar());
+            // devido a função roar() ter sleep em suas threads, é necessario separar para detectar debounce do getAction()
+            new Thread(jorge::roar).start();
+        });
+        eduardoButton.getButton().addActionListener(e -> eduardo.roar());
 
-        jorgeBed.button.addActionListener(e -> jorge.sleep());
-        eduardoBed.button.addActionListener(e -> eduardo.sleep());
+        jorgeBed.getButton().addActionListener(e -> jorge.sleep());
+        eduardoBed.getButton().addActionListener(e -> eduardo.sleep());
 
-        loopButton.button.addActionListener(e -> {
-            loopButton.button.setEnabled(false);
+        loopButton.getButton().addActionListener(e -> {
+            loopButton.getButton().setEnabled(false);
 
             // por ser na mesma thread, o loop vai impedir os outros botões de funcionarem até terminar
+            // nova thread criada puramente para o loop
             loopValue();
         });
 
@@ -58,44 +71,46 @@ public class Main {
 
     public static void loopValue() {
 
-        int valorAleatorio;
-        int valorDesignado;
-        int delay = 250;
+        new Thread(() -> {
+            int valorAleatorio;
+            int valorDesignado;
+            int delay = 250;
 
-        valorDesignado = rng.nextInt(60);
+            valorDesignado = rng.nextInt(60);
 
-        utility.write("Valor designado: " + valorDesignado + "   ");
+            utility.write("Valor designado: " + valorDesignado + "   ");
 
-        while (true) { // ou while != valorDesignado, ?, possivel
+            while (true) { // ou while != valorDesignado, ?, possivel
 
-            // utility.lerp(testVar, 10,  0.1);
+                // utility.lerp(testVar, 10,  0.1);
 
-            valorAleatorio = rng.nextInt(60);
-            //write(valorAleatorio);
+                valorAleatorio = rng.nextInt(60);
+                //write(valorAleatorio);
 
-            System.out.print("\rValor: " + valorAleatorio);
+                System.out.print("\rValor: " + valorAleatorio);
 
-            if (valorAleatorio == valorDesignado) break;
+                if (valorAleatorio == valorDesignado) break;
 
-            // try catch é basicamente um pcall() necesario em sleeps, java parece obrigar pra caso tenha erro ao contrario de lua
-            // interruptedException e runtimeException parecem ser necesasrios em outras partes também, sem try catch
+                // try catch é basicamente um pcall() necesario em sleeps, java parece obrigar pra caso tenha erro ao contrario de lua
+                // interruptedException e runtimeException parecem ser necesasrios em outras partes também, sem try catch
 
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // utility.sleep(2.5);
             }
+            System.out.println();
 
-            // utility.sleep(2.5);
-        }
-        System.out.println();
+            System.out.println("loop encontrou valor aleatorio (" + valorDesignado + ") designado.");
+            // write(" loop encontrou valor aleatorio " + valorDesignado + " designado");
 
-        System.out.println("loop encontrou valor aleatorio (" + valorDesignado + ") designado.");
-        // write(" loop encontrou valor aleatorio " + valorDesignado + " designado");
+            String phrase = writeReturn("i am a phrase wassup!");
 
-        String phrase = writeReturn("i am a phrase wassup!");
-
-        utility.write(phrase);
+            utility.write(phrase);
+        }).start();
 
     }
 
