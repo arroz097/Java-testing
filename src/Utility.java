@@ -19,6 +19,10 @@ public class Utility {
         return a + (b - a) * t;
     }
 
+    public void newThread(Runnable thread) {
+        new Thread(thread).start();
+    }
+
     public void setSizeCentered(Component gui, int width, int height) {
         int centerX = gui.getX() + gui.getWidth() / 2;
         int centerY = gui.getY() + gui.getHeight() / 2;

@@ -1,9 +1,16 @@
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 
 public class Main {
 
     private static final Utility utility = new Utility();
     private static final Random rng = new Random();
+
+    static boolean wPress = false;
+    static boolean aPress = false;
+    static boolean sPress = false;
+    static boolean dPress = false;
 
     // nao é necessario sempre ter main, mas normalmente é onde o codigo principal vai rodar
     public static void main(String[] args) {
@@ -43,6 +50,68 @@ public class Main {
         eduardoButton.getFrame().setLocation(eduardoButton.getFrame().getX() - 200, eduardoButton.getFrame().getY());
         eduardoBed.getFrame().setLocation(eduardoButton.getFrame().getX(), eduardoButton.getFrame().getY() + 150);
 
+        var cube = new ButtonCreator("i will move", "", 200, 200, 0, 0);
+        cube.getFrame().setFocusable(true);
+        cube.getFrame().requestFocusInWindow();
+
+
+        // aparentemente o keyListener do java só atende um evento por vez, por isso a movimentação via WASD nao é suave
+        // uma opção seria criar variavels que mudam dentro dos eventos e fazer a movimentação num loop principal talvez?
+        cube.getFrame().addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int tecla = e.getKeyCode();
+
+                // poderia fazer talvez uma array que determina qual tecla faz tal aççao, mas nao manjo muito de java ainda
+                if (tecla == KeyEvent.VK_W) {
+                    // utility.write("pressed w");
+                    wPress = true;
+                    // cube.getFrame().setLocation(cube.getFrame().getX(), cube.getFrame().getY() - 10);
+                }
+
+                if (tecla == KeyEvent.VK_S) {
+                    sPress = true;
+                    // cube.getFrame().setLocation(cube.getFrame().getX(), cube.getFrame().getY() + 10);
+                }
+
+                if (tecla == KeyEvent.VK_D) {
+                    dPress = true;
+                    // cube.getFrame().setLocation(cube.getFrame().getX() + 10, cube.getFrame().getY());
+                }
+
+                if (tecla == KeyEvent.VK_A) {
+                    aPress = true;
+                    // cube.getFrame().setLocation(cube.getFrame().getX() - 10, cube.getFrame().getY());
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                int tecla = e.getKeyCode();
+
+                if (tecla == KeyEvent.VK_W) {
+                    wPress = false;
+                }
+
+                if (tecla == KeyEvent.VK_S) {
+                    sPress = false;
+                }
+
+                if (tecla == KeyEvent.VK_D) {
+                    dPress = false;
+                }
+
+                if (tecla == KeyEvent.VK_A) {
+                    aPress = false;
+                }
+            }
+        });
+
         // percebi que se spammar os botões as funções do OOP gato executam varias vezes, como se estivesse nuam fila
         // java aparentemente coloca os cliques em uma fila de execução
         // da pra desativar botão no clique ou criar um sistema de debounce
@@ -52,8 +121,11 @@ public class Main {
             }
 
             // devido a função roar() ter sleep em suas threads, é necessario separar para detectar debounce do getAction()
-            new Thread(jorge::roar).start();
+            utility.newThread(jorge::roar);
+            //new Thread(jorge::roar).start();
         });
+
+        // adicionar deboucne de getActions para todos botões depois
         eduardoButton.getButton().addActionListener(e -> eduardo.roar());
 
         jorgeBed.getButton().addActionListener(e -> jorge.sleep());
@@ -66,6 +138,63 @@ public class Main {
             // nova thread criada puramente para o loop
             loopValue();
         });
+
+        // controle de movimentaçção do cubo
+
+        new Thread(() -> {
+
+            double wAcceleration = 0;
+            double aAcceleration = 0;
+            double sAcceleration = 0;
+            double dAcceleration = 0;
+
+            int velocityX;
+            int velocityY;
+
+            while (true) {
+                //System.out.printf("\rW: %-5s | A: %-5s | S: %-5s | D: %-5s", wPress, aPress, sPress, dPress);
+
+                // Tecla W
+                if (wPress) {
+                    // acelerar
+                    wAcceleration = Math.clamp(wAcceleration + 0.1, 0, 5);
+                } else {
+                    // desacelerar
+                    wAcceleration = Math.clamp(wAcceleration - 0.1, 0, 5);
+                }
+
+
+                // Tecla A
+                if (aPress) {
+                    aAcceleration = Math.clamp(aAcceleration + 0.1, 0, 5);
+                } else {
+                    aAcceleration = Math.clamp(aAcceleration - 0.1, 0, 5);
+                }
+
+                // Tecla S
+                if (sPress) {
+                    sAcceleration = Math.clamp(sAcceleration + 0.1, 0, 5);
+                } else {
+                    sAcceleration = Math.clamp(sAcceleration - 0.1, 0, 5);
+                }
+
+                // Tecla D
+                if (dPress) {
+                    dAcceleration = Math.clamp(dAcceleration + 0.1, 0, 5);
+
+                } else {
+                    dAcceleration = Math.clamp(dAcceleration - 0.1, 0, 5);
+                }
+
+                velocityX = (int) dAcceleration - (int) aAcceleration;
+                velocityY = (int) -wAcceleration - (int) -sAcceleration;
+
+                cube.getFrame().setLocation(cube.getFrame().getX() + velocityX, cube.getFrame().getY() + velocityY);
+
+                utility.sleep(0.01);
+
+            }
+        }).start();
 
     }
 
