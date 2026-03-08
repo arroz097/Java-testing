@@ -41,8 +41,11 @@ public class Cat {
             this.energy--;
             utility.write("gato " + this.name + " diz: " + "RAWRRRR!!!!");
             utility.sleep(0.5);
-            utility.write(this.name + " perde " + cost + " stamina. Atual: " + this.energy);
 
+            utility.write(this.name + " perde " + cost + " stamina");
+            utility.sleep(0.5);
+
+            utility.write(this.name + " possui atualmente " + this.energy + " de energia");
             utility.sleep(0.3);
 
             this.onAction = false;
@@ -59,15 +62,20 @@ public class Cat {
             this.onAction = true;
 
             utility.write(this.name + " iniciando soneca");
+
+            int recoveredEnergy = 0;
+
             while (this.energy < 10) {
                 utility.sleep(1);
 
                 this.energy++;
+                recoveredEnergy++;
 
-                utility.write(this.name + " energy: " + this.energy);
+                utility.write(this.name + " energia: " + this.energy);
             }
+
             utility.sleep(0.5);
-            utility.write(this.name + " dormiu um bocado e recuperou energia" );
+            utility.write(this.name + " dormiu um bocado e recuperou +" + recoveredEnergy + " de energia"); // talvez dizer quanto de energia recuperou?
 
             utility.sleep(0.5);
 
