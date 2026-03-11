@@ -1,3 +1,6 @@
+import com.arroz097.models.ButtonCreator;
+import com.arroz097.utils.Utility;
+
 import javax.swing.*;
 import java.util.Random;
 // importar pacotes de utilidade propriamente meus? talvez
@@ -38,7 +41,7 @@ public class ButtonTest {
 
         /*
          var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
-         var utility = new Utility();
+         var utility = new com.arroz097.utils.Utility();
          var rng = new Random();
          var button = new ButtonTest();
         */

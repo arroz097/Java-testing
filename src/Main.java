@@ -1,6 +1,12 @@
+import com.arroz097.models.ButtonCreator;
+import com.arroz097.models.Cat;
+import com.arroz097.utils.Utility;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
+import java.io.File;
 
 public class Main {
 
@@ -15,12 +21,12 @@ public class Main {
     // nao é necessario sempre ter main, mas normalmente é onde o codigo principal vai rodar
     public static void main(String[] args) {
 
-        // Classes usam letras maiusculas de inicio, (Cat, Random, Utility)
+        // Classes usam letras maiusculas de inicio, (com.arroz097.models.Cat, Random, com.arroz097.utils.Utility)
         // var ajuda a nao ter que repetir a tipagem de classes ao instanciar com new
         var jorge = new Cat("jorge");
         var eduardo = new Cat("eduardo");
         //var rng = new Random();
-        //var utility = new Utility();
+        //var utility = new com.arroz097.utils.Utility();
         // var button = new ButtonTest();
 
         // se caso .isMoving nao fosse private
@@ -43,7 +49,7 @@ public class Main {
         loopButton.getFrame().setLocation(loopButton.getFrame().getX(), 200);
 
         // nao é a melhor das formas para posicionar um gui
-        // já que não posiciona de acordo com a dimensão da tela, e sim com valores puros absolutos
+        // já que o que fiz não posiciona de acordo com a dimensão da tela, e sim com valores puros absolutos
         jorgeButton.getFrame().setLocation(jorgeButton.getFrame().getX() + 200, jorgeButton.getFrame().getY());
         jorgeBed.getFrame().setLocation(jorgeButton.getFrame().getX(), jorgeButton.getFrame().getY() + 150);
 
@@ -53,7 +59,49 @@ public class Main {
         var cube = new ButtonCreator("i will move", "", 200, 200, 0, 0);
         cube.getFrame().setFocusable(true);
         cube.getFrame().requestFocusInWindow();
+        cube.getFrame().setLocation(0, 0);
 
+        File pastaGatos = new File("src/assets/cats/images");
+        File[] imagens = pastaGatos.listFiles();  // array
+
+        // da pra fazer direto também
+        File[] imgs = new File("src/assets/cats/images").listFiles((dir, name) -> name.endsWith(".png"));
+
+        if (imgs != null) {
+            for (File path : imgs) {
+
+                utility.write(path);
+            }
+
+            /*
+            int[] numeros = new int[50];
+
+            for (int valor : numeros) {
+
+                utility.write(valor);
+            }
+             */
+        }
+
+        JFrame catFrame = new JFrame("cat sprite test");
+        catFrame.setSize(200, 200);
+        //catFrame.setLayout(null);
+        catFrame.setLocationRelativeTo(null); // centraliza o frame
+        catFrame.setAlwaysOnTop(true); // deixa o frame sempre acima de outros
+        catFrame.setUndecorated(true); // remove as bordas do frame
+        //catFrame.setBackground(new java.awt.Color(0, 0, 0, 1)); // "a" é o alpha, a opacidade, 0 é invisivel
+
+        var catResize = utility.resizeImage("src/assets/cats/images/cat5.png", 200, 200);
+        ImageIcon cat1 = new ImageIcon(catResize);
+
+        JLabel labelCat = new JLabel(cat1);
+        //labelCat.setHorizontalAlignment(SwingConstants.CENTER);
+        labelCat.setSize(cat1.getIconWidth(), cat1.getIconHeight());
+        //labelCat.setBounds(catFrame.getWidth() / cat1.getIconWidth(), catFrame.getHeight() / cat1.getIconHeight(), cat1.getIconWidth(), cat1.getIconHeight());
+
+
+        catFrame.add(labelCat);
+        catFrame.setVisible(true);
 
         // aparentemente o keyListener do java só atende um evento por vez, por isso a movimentação via WASD nao é suave
         // uma opção seria criar variavels que mudam dentro dos eventos e fazer a movimentação num loop principal talvez?
