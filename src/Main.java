@@ -76,32 +76,32 @@ public class Main {
             /*
             int[] numeros = new int[50];
 
-            for (int valor : numeros) {
+            for (int valor: numeros) {
 
                 utility.write(valor);
             }
              */
         }
 
-        JFrame catFrame = new JFrame("cat sprite test");
-        catFrame.setSize(200, 200);
-        //catFrame.setLayout(null);
-        catFrame.setLocationRelativeTo(null); // centraliza o frame
-        catFrame.setAlwaysOnTop(true); // deixa o frame sempre acima de outros
-        catFrame.setUndecorated(true); // remove as bordas do frame
-        //catFrame.setBackground(new java.awt.Color(0, 0, 0, 1)); // "a" é o alpha, a opacidade, 0 é invisivel
-
-        var catResize = utility.resizeImage("src/assets/cats/images/cat5.png", 200, 200);
-        ImageIcon cat1 = new ImageIcon(catResize);
-
-        JLabel labelCat = new JLabel(cat1);
-        //labelCat.setHorizontalAlignment(SwingConstants.CENTER);
-        labelCat.setSize(cat1.getIconWidth(), cat1.getIconHeight());
-        //labelCat.setBounds(catFrame.getWidth() / cat1.getIconWidth(), catFrame.getHeight() / cat1.getIconHeight(), cat1.getIconWidth(), cat1.getIconHeight());
-
-
-        catFrame.add(labelCat);
-        catFrame.setVisible(true);
+//        JFrame catFrame = new JFrame("cat sprite test");
+//        catFrame.setSize(200, 200);
+//        //catFrame.setLayout(null);
+//        catFrame.setLocationRelativeTo(null); // centraliza o frame
+//        catFrame.setAlwaysOnTop(true); // deixa o frame sempre acima de outros
+//        catFrame.setUndecorated(true); // remove as bordas do frame
+//        //catFrame.setBackground(new java.awt.Color(0, 0, 0, 1)); // "a" é o alpha, a opacidade, 0 é invisivel
+//
+//        var catResize = utility.resizeImage("src/assets/cats/images/cat5.png", 200, 200);
+//        ImageIcon cat1 = new ImageIcon(catResize);
+//
+//        JLabel labelCat = new JLabel(cat1);
+//        //labelCat.setHorizontalAlignment(SwingConstants.CENTER);
+//        labelCat.setSize(cat1.getIconWidth(), cat1.getIconHeight());
+//        //labelCat.setBounds(catFrame.getWidth() / cat1.getIconWidth(), catFrame.getHeight() / cat1.getIconHeight(), cat1.getIconWidth(), cat1.getIconHeight());
+//
+//
+//        catFrame.add(labelCat);
+//        catFrame.setVisible(true);
 
         // aparentemente o keyListener do java só atende um evento por vez, por isso a movimentação via WASD nao é suave
         // uma opção seria criar variavels que mudam dentro dos eventos e fazer a movimentação num loop principal talvez?
