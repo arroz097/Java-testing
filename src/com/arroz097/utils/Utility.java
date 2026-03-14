@@ -1,7 +1,11 @@
 package com.arroz097.utils;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Utility {
 
@@ -33,11 +37,26 @@ public class Utility {
         gui.setBounds(centerX - width / 2, centerY - height / 2, width, height);
     }
 
-    public Image resizeImage(String path, int width, int height) {
-        ImageIcon originalIcon = new ImageIcon(path);
-        Image pureImage = originalIcon.getImage();
-        return pureImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        // return new ImageIcon(resizedImage).getImage();
+    public BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(new File(path));
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar imagem: " + path, e);
+        }
+    }
+
+    public BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.drawImage(originalImage, 0, 0, width, height, null);
+        g2d.dispose();
+
+        return resizedImage;
     }
 
     // entender o conceito de "L" em numeros longos, tem relação com milimis

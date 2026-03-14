@@ -1,7 +1,9 @@
 package com.arroz097.models;
 
 import com.arroz097.utils.Utility;
-import com.arroz097.models.SoundManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.Random;
 
@@ -19,6 +21,7 @@ public class Cat {
     // private faz com que scripts de fora nao consigam alterar variaveis private
     // final permite que variavel só seja atribuido um valor uma unica vez
     private final String name;
+    private final int maxEnergy;
     private int energy;
     private boolean onAction = false;
 
@@ -34,14 +37,14 @@ public class Cat {
 
     // Isso é o construtor: ele roda assim que você dá o "new"
     // equivalente ao .new() de OOP dos metatables, this é o equivalente de self
-    public Cat(String nome, int width, int height) {
+    public Cat(String nome, int energy, int width, int height) {
 
+        // botar um tipo de texto em cima da cabeça do gatos referenciando seu nome
         this.name = nome;
-        this.energy = 10; // começa com 10 de energia
+        this.maxEnergy = energy;
+        this.energy = energy;
 
-        // mudar isso aqui pra fora talvez
         File[] images = catImages.listFiles((dir, name) -> name.endsWith(".png"));
-
         if (images != null && images.length > 0) {
 
             int index = rng.nextInt(images.length);
@@ -49,14 +52,22 @@ public class Cat {
             File chosenCat = images[index];
 
             this.catImage = chosenCat.getPath();
-            this.cat = new ImageCreator(this.catImage, width, height);
+
+            SwingUtilities.invokeLater(() -> {
+                this.cat = new ImageCreator(this.catImage, 250, 259);
+
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+                this.cat.getFrame().setLocation(rng.nextInt((int) screenSize.getWidth()), rng.nextInt((int) screenSize.getHeight()));
+            });
 
         }
     }
 
+
     public Cat(String nome) {
         // this() permite encadear construtores com overload sem ter que precisar repetir o codigo
-        this(nome, 200, 200);
+        this(nome, 10, 200, 200);
     }
 
     public String getName() {
@@ -97,7 +108,20 @@ public class Cat {
         if (this.energy >= cost) {
             this.onAction = true;
 
-            SoundManager.playSound("src/assets/cats/sounds/meow2.wav");
+            File[] sounds = soundFolder.listFiles();
+
+            assert sounds != null;
+
+            int index = rng.nextInt(sounds.length);
+
+            File chosenSound = sounds[index];
+
+            SoundManager.playSound(chosenSound.getPath());
+
+            int lastWidth = this.cat.getLabel().getWidth();
+            int lastHeight = this.cat.getLabel().getHeight();
+
+            this.cat.updateImageLabel(this.cat.getLabel().getWidth() + 50, this.cat.getLabel().getHeight() + 50);
 
             this.energy--;
             utility.write("gato " + this.name + " diz: " + "RAWRRRR!!!!");
@@ -105,6 +129,8 @@ public class Cat {
 
             utility.write(this.name + " perde " + cost + " stamina");
             utility.sleep(0.5);
+
+            this.cat.updateImageLabel(lastWidth, lastHeight);
 
             utility.write(this.name + " possui atualmente " + this.energy + " de energia");
             utility.sleep(0.3);
@@ -117,7 +143,7 @@ public class Cat {
     }
 
     public void sleep() {
-        if (this.energy < 10) {
+        if (this.energy < this.maxEnergy) {
             if (this.onAction) return;
 
             this.onAction = true;
