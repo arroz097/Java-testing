@@ -1,6 +1,7 @@
 package com.arroz097.models;
 
 import com.arroz097.utils.Utility;
+import com.arroz097.models.SpritePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,19 +13,30 @@ public class ImageCreator {
 
     private final BufferedImage originalImage;
     private final JFrame frame;
-    private final JLabel label;
+    //private final JLabel label;
+    private final SpritePanel spritePanel;
 
     public ImageCreator(String path, int width, int height) {
 
         this.originalImage = utility.loadImage(path);
+
         this.frame = new JFrame("sprite");
         this.frame.setSize(width, height);
         //this.frame.setLayout(null);
+
         this.frame.setLocationRelativeTo(null); // centraliza o frame
         this.frame.setAlwaysOnTop(true); // deixa o frame sempre acima de outros
         this.frame.setUndecorated(true); // remove as bordas do frame
-        this.frame.setBackground(new java.awt.Color(0, 0, 0, 0)); // "a" é o alpha, a opacidade, 0 é invisivel
+        this.frame.setBackground(new Color(0, 0, 0, 0)); // "a" é o alpha, a opacidade, 0 é invisivel
 
+        int textPadding = 30;
+
+        this.spritePanel = new SpritePanel(this.originalImage, width, height, textPadding);
+
+        this.frame.add(this.spritePanel, BorderLayout.CENTER);
+        this.frame.setVisible(true);
+
+        /*
         Image resizedImage = utility.resizeImage(this.originalImage, width, height);
         ImageIcon image = new ImageIcon(resizedImage);
 
@@ -34,26 +46,32 @@ public class ImageCreator {
         this.frame.add(this.label);
         this.frame.setVisible(true);
 
+         */
+
     }
 
-    public void updateImageLabel(int width, int height) {
+    public void updateSpriteSize(int width, int height) {
+        this.spritePanel.setImageSize(width, height);
+        //this.spritePanel.setPreferredSize(new Dimension(width, height));
 
-        Image resizedImage = utility.resizeImage(this.originalImage, width, height);
-        ImageIcon image = new ImageIcon(resizedImage);
+        //this.frame.pack();
+        this.frame.repaint();
+    }
 
-        this.label.setIcon(image);
-        //utility.setSizeCentered(this.frame, width, height);
+    public int getSpriteWidth() {
+        return this.spritePanel.getDrawWidth();
+    }
 
-        this.label.repaint();
-        this.frame.revalidate();
+    public int getSpriteHeight() {
+        return this.spritePanel.getDrawHeight();
     }
 
     public JFrame getFrame() {
         return this.frame;
     }
 
-    public JLabel getLabel() {
-        return this.label;
+    public SpritePanel getSpritePanel() {
+        return this.spritePanel;
     }
 
 }

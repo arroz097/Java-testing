@@ -56,9 +56,15 @@ public class Cat {
             SwingUtilities.invokeLater(() -> {
                 this.cat = new ImageCreator(this.catImage, 250, 259);
 
+                this.cat.getSpritePanel().setSpriteName(this.name);
+
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                Image icon = new ImageIcon("src/assets/misc/cat_icon.png").getImage();
 
                 this.cat.getFrame().setLocation(rng.nextInt((int) screenSize.getWidth()), rng.nextInt((int) screenSize.getHeight()));
+                this.cat.getFrame().setTitle(this.name);
+
+                this.cat.getFrame().setIconImage(icon);
             });
 
         }
@@ -98,6 +104,7 @@ public class Cat {
 
     private void catLogic() {
         // onde toda logica do gato vai ficar
+        wander();
     }
 
     public void roar() {
@@ -118,10 +125,46 @@ public class Cat {
 
             SoundManager.playSound(chosenSound.getPath());
 
-            int lastWidth = this.cat.getLabel().getWidth();
-            int lastHeight = this.cat.getLabel().getHeight();
+            int lastWidth = this.cat.getSpriteWidth();
+            int lastHeight = this.cat.getSpriteHeight();
 
-            this.cat.updateImageLabel(this.cat.getLabel().getWidth() + 50, this.cat.getLabel().getHeight() + 50);
+            int targetWidth = lastWidth + 50;
+            int targetHeight = lastHeight + 50;
+
+            // final nao trava o conteudo, apenas referencia, então tabelas e seus valores podem mudar
+            final int[] currentWidth = {lastWidth};
+            final int[] currentHeight = {lastHeight};
+            final boolean[] growing = {true};
+
+            // 16ms = 60 fps, 33 ms = ~30fps
+            Timer timer = new Timer(16, null);
+
+            timer.addActionListener(e -> {
+                if (growing[0]) {
+                    currentWidth[0] = Math.min(currentWidth[0] + 2, targetWidth);
+                    currentHeight[0] = Math.min(currentHeight[0] + 2, targetHeight);
+
+                    this.cat.updateSpriteSize(currentWidth[0], currentHeight[0]);
+
+                    if (currentWidth[0] == targetWidth && currentHeight[0] == targetHeight) {
+                        growing[0] = false;
+                    }
+                } else {
+                    currentWidth[0] = Math.max(currentWidth[0] - 2, lastWidth);
+                    currentHeight[0] = Math.max(currentHeight[0] - 2, lastHeight);
+
+                    this.cat.updateSpriteSize(currentWidth[0], currentHeight[0]);
+
+                    if (currentWidth[0] == lastWidth && currentHeight[0] == lastHeight) {
+                        this.cat.updateSpriteSize(lastWidth, lastHeight);
+                        timer.stop();
+                    }
+                }
+            });
+
+            timer.start();
+
+            //this.cat.updateImageLabel(this.cat.getLabel().getWidth() + 50, this.cat.getLabel().getHeight() + 50);
 
             this.energy--;
             utility.write("gato " + this.name + " diz: " + "RAWRRRR!!!!");
@@ -130,7 +173,7 @@ public class Cat {
             utility.write(this.name + " perde " + cost + " stamina");
             utility.sleep(0.5);
 
-            this.cat.updateImageLabel(lastWidth, lastHeight);
+           // this.cat.updateImageLabel(lastWidth, lastHeight);
 
             utility.write(this.name + " possui atualmente " + this.energy + " de energia");
             utility.sleep(0.3);
