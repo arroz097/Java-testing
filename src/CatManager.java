@@ -10,21 +10,41 @@ public class CatManager {
 
     public static void main(String[] argumentos) {
 
+        // fazer botao de sapwnar de gatos e tal?
+
+        // e aparentemente javaSwing nao é bom pra animação e sprites
+        // testar javaFX depois para sprites mais elaborados
         Cat jorgineo = new Cat("jorgineo");
         Cat fabricio = new Cat("fabricio");
         Cat jose = new Cat("jose");
 
+//        for (int i = 0; i < 6; i++) {
+//            utility.sleep(1.5);
+//            jorgineo.roar();
+//        }
+//
+//        jorgineo.sleep();
+
         utility.sleep(3);
 
-        jorgineo.roar();
+        jorgineo.initialize();
+        fabricio.initialize();
+        jose.initialize();
 
-        utility.sleep(2);
-
-        fabricio.roar();
-
-        utility.sleep(2);
-
-        jose.roar();
+//        Cat fabricio = new Cat("fabricio");
+//        Cat jose = new Cat("jose");
+//
+//        utility.sleep(3);
+//
+//        jorgineo.roar();
+//
+//        utility.sleep(2);
+//
+//        fabricio.roar();
+//
+//        utility.sleep(2);
+//
+//        jose.roar();
 
     }
 
