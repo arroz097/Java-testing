@@ -26,7 +26,8 @@ public class Cat {
     private boolean onAction = false;
 
     private ImageCreator cat;
-    private String catImage;
+    private String catType;
+    private String catSound;
 
     // talvez uma classe de criar imagens e referenciar aqui?
 
@@ -45,16 +46,28 @@ public class Cat {
         this.energy = energy;
 
         File[] images = catImages.listFiles((dir, name) -> name.endsWith(".png"));
+        File[] sounds = soundFolder.listFiles();
+
+        if (sounds != null) {
+            int soundIndex = rng.nextInt(sounds.length);
+
+            File chosenSound = sounds[soundIndex];
+
+            this.catSound = chosenSound.getPath();
+        }
+
         if (images != null && images.length > 0) {
 
-            int index = rng.nextInt(images.length);
+            int imageIndex = rng.nextInt(images.length);
 
-            File chosenCat = images[index];
+            File chosenCat = images[imageIndex];
 
-            this.catImage = chosenCat.getPath();
+            this.catType = chosenCat.getName();
+
+            utility.write(chosenCat.getName());
 
             SwingUtilities.invokeLater(() -> {
-                this.cat = new ImageCreator(this.catImage, 250, 259);
+                this.cat = new ImageCreator(chosenCat.getPath(), 250, 250);
 
                 this.cat.getSpritePanel().setSpriteName(this.name);
 
@@ -69,7 +82,6 @@ public class Cat {
 
         }
     }
-
 
     public Cat(String nome) {
         // this() permite encadear construtores com overload sem ter que precisar repetir o codigo
@@ -88,23 +100,76 @@ public class Cat {
         return this.onAction;
     }
 
-    public String getCatImage() {
-        return this.catImage;
+    public JFrame getCatFrame() {
+        return this.cat.getFrame();
     }
 
     public void initialize() {
         // iniciar o movimento aleatorio dos gatos e cada um com sua função aleatoria e etc
+        catLogic();
     }
 
     private void wander() {
-        new Thread(() -> {
+        if (this.onAction) { return; }
 
-        }).start();
+        final int[] x = {0};
+        final int[] y = {0};
+
+        int randomX = rng.nextInt(-60, 60);
+        int randomY = rng.nextInt(-60, 60);
+
+        Timer walk = new Timer(60, null);
+
+        walk.addActionListener(e -> {
+
+            // otimizar a velociodade e tentar deixar mmais lento a movimentaçao
+            // usar lerp talvez?
+
+            if (randomX < 0 ) {
+                x[0] = Math.clamp(x[0] - 1, randomX, 1);
+            } else {
+                x[0] = Math.clamp(x[0] + 1, 0, randomX);
+            }
+
+            if (randomY < 0 ) {
+                y[0] = Math.clamp(y[0] - 1, randomY, 1);
+            } else {
+                y[0] = Math.clamp(y[0] + 1, 0, randomY);
+            }
+
+            //utility.write(x[0]);
+
+            if (x[0] == randomX) { walk.stop(); }
+            if (y[0] == randomY) { walk.stop(); }
+
+            getCatFrame().setLocation(getCatFrame().getX() + x[0], getCatFrame().getY() + y[0]);
+        });
+
+        walk.start();
+
     }
 
     private void catLogic() {
         // onde toda logica do gato vai ficar
-        wander();
+        new Thread(() -> {
+            while (true) {
+                // deixar mais aleatorio depois
+                utility.sleep(rng.nextInt(3, 7));
+
+                boolean canAct = rng.nextBoolean();
+
+                if (canAct) {
+                    if (this.energy >= 1) {
+                        roar();
+                    } else {
+                        sleep();
+                    }
+                }
+
+                wander();
+
+            }
+        }).start();
     }
 
     public void roar() {
@@ -115,15 +180,7 @@ public class Cat {
         if (this.energy >= cost) {
             this.onAction = true;
 
-            File[] sounds = soundFolder.listFiles();
-
-            assert sounds != null;
-
-            int index = rng.nextInt(sounds.length);
-
-            File chosenSound = sounds[index];
-
-            SoundManager.playSound(chosenSound.getPath());
+            SoundManager.playSound(this.catSound);
 
             int lastWidth = this.cat.getSpriteWidth();
             int lastHeight = this.cat.getSpriteHeight();
@@ -193,6 +250,10 @@ public class Cat {
 
             utility.write(this.name + " iniciando soneca");
 
+            this.cat.getSpritePanel().setSpriteImage(sleepFolder + "/" + catType);
+
+            //this.cat = new ImageCreator(sleepFolder + "/" + catType, 250, 250);
+
             int recoveredEnergy = 0;
 
             while (this.energy < 10) {
@@ -208,6 +269,8 @@ public class Cat {
             utility.write(this.name + " dormiu um bocado e recuperou +" + recoveredEnergy + " de energia"); // talvez dizer quanto de energia recuperou?
 
             utility.sleep(0.5);
+
+            this.cat.getSpritePanel().setSpriteImage(catImages + "/" + catType);
 
             this.onAction = false;
         } else {

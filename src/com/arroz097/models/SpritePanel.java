@@ -1,5 +1,6 @@
 package com.arroz097.models;
 
+import com.arroz097.utils.Utility;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,7 +8,9 @@ import java.awt.image.BufferedImage;
 // extends faz a classe herdar metodos de outra classe aparentemente
 public class SpritePanel extends JPanel {
 
-    private final BufferedImage image;
+    private static final Utility utility = new Utility();
+
+    private BufferedImage image;
     private int drawWidth;
     private int drawHeight;
     private final int textPadding;
@@ -32,6 +35,11 @@ public class SpritePanel extends JPanel {
         setSize(width, height);
 
         revalidate();
+        repaint();
+    }
+
+    public void setSpriteImage(String path) {
+        this.image = utility.loadImage(path);
         repaint();
     }
 
@@ -60,15 +68,27 @@ public class SpritePanel extends JPanel {
 
         g.drawImage(image, x, y, drawWidth, drawHeight, null);
 
-        g.setFont(new Font("Arial", Font.BOLD, 18));
-        g.setColor(Color.WHITE);
-
         FontMetrics metrics = g.getFontMetrics();
         int textWidth = metrics.stringWidth(this.spriteName);
 
         int textX = (getWidth() - textWidth) / 2;
         int textY = (textPadding / 2) + (metrics.getAscent() / 2);
 
-        g.drawString(this.spriteName, textX, textY);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // salva o composite original
+        Composite original = g2d.getComposite();
+
+        // seta transparência (0.0 = invisível, 1.0 = opaco)
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        g2d.setFont(new Font("Arial", Font.ITALIC, 18));
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(this.spriteName, textX, textY);
+
+        // restaura o composite original pra nao afetar o resto
+        g2d.setComposite(original);
+
+
     }
 }
